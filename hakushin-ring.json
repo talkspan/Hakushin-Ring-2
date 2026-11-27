@@ -1,0 +1,378 @@
+{
+  "name": "Hakushin Ring",
+  "units": "mm",
+  "parameters": {
+    "outer_or": { "value": 80, "note": "Outer ring: outside radius. The whole piece scales from this.", "min": 60, "max": 86 },
+    "outer_w": { "value": 18, "note": "Outer ring: radial width", "min": 12, "max": 24 },
+    "outer_t": { "value": 12, "note": "Outer ring: thickness", "min": 8, "max": 16 },
+    "ring_w": { "value": 8, "note": "Hoop and inner ring: radial width", "min": 6, "max": 12 },
+    "ring_t": { "value": 6, "note": "Hoop and inner rings: thickness", "min": 4, "max": 10 },
+    "innermost_w": { "value": 7, "note": "Innermost ring: radial width", "min": 5, "max": 10 },
+    "gap": { "value": 3, "note": "Radial gap between nested rings; a 3 mm nylon spacer sits in it on every pivot", "min": 2.5, "max": 5 },
+
+    "hoop_ir": { "value": "outer_or + gap", "note": "Hoop: inside radius" },
+    "hoop_or": { "value": "hoop_ir + ring_w", "note": "Hoop: outside radius" },
+    "hoop_rc": { "value": "(hoop_ir + hoop_or) / 2", "note": "Hoop: centreline radius" },
+    "outer_ir": { "value": "outer_or - outer_w", "note": "Outer ring: inside radius" },
+    "inner_or": { "value": "outer_ir - gap", "note": "Inner ring: outside radius" },
+    "inner_ir": { "value": "inner_or - ring_w", "note": "Inner ring: inside radius" },
+    "innermost_or": { "value": "inner_ir - gap", "note": "Innermost ring: outside radius" },
+    "innermost_ir": { "value": "innermost_or - innermost_w", "note": "Innermost ring: inside radius" },
+
+    "pin_d": { "value": 3, "note": "Pivot pins: 3 mm hardened steel dowel pins (ISO 8734)" },
+    "run_d": { "value": 3.3, "note": "Hole a ring turns on: running fit on a 3 mm pin" },
+    "pin_a_l": { "value": 20, "note": "Pin length, hoop to outer ring (stock: 3 x 20)" },
+    "pin_b_l": { "value": 26, "note": "Pin length, outer ring to inner ring (stock: 3 x 26)" },
+    "pin_c_l": { "value": 16, "note": "Pin length, inner ring to innermost ring (stock: 3 x 16)" },
+    "spacer_d": { "value": 5.5, "note": "Pivot spacer outside diameter" },
+    "spacer_l": { "value": "gap - 0.2", "note": "Pivot spacer length: the gap less 0.1 mm of play each end" },
+
+    "axle_d": { "value": 2, "note": "Crest axle: 2 mm brass rod" },
+    "crest_s": { "value": 3.4, "note": "Crest scale: mm per unit of the fox-head outline", "min": 2.4, "max": 3.6 },
+    "crest_t": { "value": 6, "note": "Crest thickness" },
+    "crest_half_w": { "value": "6.5 * crest_s", "note": "Crest half width where the axle passes through" },
+    "crest_reach": { "value": "sqrt((9.99 * crest_s) ^ 2 + (crest_t / 2) ^ 2)", "note": "Furthest point of the crest from the centre (the ear tips)" },
+
+    "clasp_wall": { "value": 1.2, "note": "Clasp wall thickness" },
+    "clasp_len": { "value": 12, "note": "Clasp length along the ring" },
+    "clasp_fit": { "value": 0.1, "note": "Clearance between a clasp and its ring, per side" },
+    "outer_sweep": { "value": "sqrt((outer_or + clasp_wall + clasp_fit) ^ 2 + (outer_t / 2 + clasp_wall + clasp_fit) ^ 2 + (clasp_len / 2) ^ 2)", "note": "Radius of the sphere the outer ring and its clasps sweep as they spin" },
+
+    "base_d": { "value": 130, "note": "Base diameter", "min": 100, "max": 180 },
+    "base_t": { "value": 14, "note": "Base thickness", "min": 10, "max": 25 },
+    "stem_d": { "value": 18, "note": "Stem diameter" },
+    "stem_h": { "value": 30, "note": "Stem height, base to the bottom of the hoop", "min": 15, "max": 80 },
+    "saddle_w": { "value": 36, "note": "Saddle block width" },
+    "saddle_d": { "value": 16, "note": "Saddle block depth, front to back" },
+    "screw_x": { "value": 11, "note": "Saddle screws: offset either side of the centre" },
+    "screw_drop": { "value": "sqrt(hoop_rc ^ 2 - screw_x ^ 2)", "note": "Saddle screws: distance below the ring centre" },
+    "centre_z": { "value": "base_t + stem_h + hoop_or", "note": "Height of the ring centre above the table" },
+
+    "tassel_angle": { "value": 18, "note": "Tassel eyes: degrees below horizontal on each side of the hoop", "min": 5, "max": 40 },
+    "tassel_len": { "value": 60, "note": "Tassel hanging length", "min": 30, "max": 80 },
+    "tassel_x": { "value": "hoop_rc * cos(tassel_angle)", "note": "Tassel eyes: sideways offset" },
+    "tassel_z": { "value": "centre_z - hoop_rc * sin(tassel_angle)", "note": "Tassel eyes: height above the table" },
+    "bed": { "value": 220, "note": "Printer bed size the largest part must fit" }
+  },
+  "materials": {
+    "petg": { "name": "PETG, white (printed)", "density": 1270 },
+    "pla_gold": { "name": "PLA, silk gold (printed)", "density": 1240 },
+    "steel": { "name": "Steel", "density": 7850 },
+    "brass": { "name": "Brass", "density": 8500 },
+    "nylon": { "name": "Nylon", "density": 1150 },
+    "walnut": { "name": "Walnut", "density": 640 },
+    "silk": { "name": "Silk tassel (bought)", "density": 300 }
+  },
+  "parts": {
+    "base": {
+      "name": "Base",
+      "material": "walnut",
+      "note": "Turn or CNC from 15 mm walnut board, or print. Drill 4.5 through the centre and counterbore 8 x 5 from below.",
+      "features": [
+        { "type": "cylinder", "d": "base_d", "h": "base_t" },
+        { "type": "chamfer", "d": 2 },
+        { "type": "hole", "d": 4.5, "at": [0, 0, 0] },
+        { "type": "cylinder", "op": "cut", "d": 8, "h": 5 }
+      ]
+    },
+    "stem": {
+      "name": "Stem and saddle",
+      "material": "petg",
+      "note": "Print upright, 4 walls. The slot on top holds the hoop; melt an M4 insert into the hole underneath.",
+      "features": [
+        { "type": "cylinder", "d": "stem_d", "h": "stem_h" },
+        { "type": "box", "size": ["saddle_w", "saddle_d", "6 + ring_w"], "at": [0, 0, "stem_h - 6"] },
+        { "type": "chamfer", "d": 1, "edges": "z" },
+        { "type": "cylinder", "op": "cut", "d": "2 * hoop_or + 0.3", "h": "ring_t + 0.3", "axis": "y", "at": [0, "-(ring_t + 0.3) / 2", "stem_h + hoop_or"] },
+        { "type": "hole", "d": 3.2, "axis": "y", "points": [["screw_x", 0, "stem_h + hoop_or - screw_drop"], ["-screw_x", 0, "stem_h + hoop_or - screw_drop"]] },
+        { "type": "hole", "d": 5.6, "at": [0, 0, 10], "depth": 10 }
+      ]
+    },
+    "hoop": {
+      "name": "Hoop",
+      "material": "petg",
+      "note": "Print flat. Fixed to the stem; carries the top and bottom pivots of the outer ring and the two tassel eyes. Ream the two pin holes for a press fit on 3 mm pins.",
+      "features": [
+        { "type": "cylinder", "d": "2 * hoop_or", "h": "ring_t", "axis": "y", "at": [0, "-ring_t / 2", 0] },
+        { "type": "cylinder", "op": "cut", "d": "2 * hoop_ir", "h": "ring_t", "axis": "y", "at": [0, "-ring_t / 2", 0] },
+        { "type": "hole", "d": "pin_d", "axis": "z", "at": [0, 0, 0] },
+        { "type": "hole", "d": 3.2, "axis": "y", "points": [["screw_x", 0, "-screw_drop"], ["-screw_x", 0, "-screw_drop"]] },
+        { "type": "hole", "d": 2.5, "axis": "y", "points": [["tassel_x", 0, "-hoop_rc * sin(tassel_angle)"], ["-tassel_x", 0, "-hoop_rc * sin(tassel_angle)"]] }
+      ]
+    },
+    "outer_ring": {
+      "name": "Outer ring",
+      "material": "petg",
+      "note": "Print flat. Turns about the vertical axis on the hoop's pins (3.3 holes top and bottom); the side holes are a press fit for the inner ring's pins.",
+      "features": [
+        { "type": "cylinder", "d": "2 * outer_or", "h": "outer_t", "axis": "y", "at": [0, "-outer_t / 2", 0] },
+        { "type": "cylinder", "op": "cut", "d": "2 * outer_ir", "h": "outer_t", "axis": "y", "at": [0, "-outer_t / 2", 0] },
+        { "type": "hole", "d": "run_d", "axis": "z", "at": [0, 0, 0] },
+        { "type": "hole", "d": "pin_d", "axis": "x", "at": [0, 0, 0] }
+      ]
+    },
+    "inner_ring": {
+      "name": "Inner ring",
+      "material": "petg",
+      "note": "Print flat. Turns about the horizontal axis on the outer ring's pins (3.3 side holes); the top and bottom holes are a press fit for the innermost ring's pins.",
+      "features": [
+        { "type": "cylinder", "d": "2 * inner_or", "h": "ring_t", "axis": "y", "at": [0, "-ring_t / 2", 0] },
+        { "type": "cylinder", "op": "cut", "d": "2 * inner_ir", "h": "ring_t", "axis": "y", "at": [0, "-ring_t / 2", 0] },
+        { "type": "hole", "d": "run_d", "axis": "x", "at": [0, 0, 0] },
+        { "type": "hole", "d": "pin_d", "axis": "z", "at": [0, 0, 0] }
+      ]
+    },
+    "innermost_ring": {
+      "name": "Innermost ring",
+      "material": "petg",
+      "note": "Print flat. Turns on the inner ring's pins (3.3 holes top and bottom); the 2 mm side holes are a press fit for the crest axle.",
+      "features": [
+        { "type": "cylinder", "d": "2 * innermost_or", "h": "ring_t", "axis": "y", "at": [0, "-ring_t / 2", 0] },
+        { "type": "cylinder", "op": "cut", "d": "2 * innermost_ir", "h": "ring_t", "axis": "y", "at": [0, "-ring_t / 2", 0] },
+        { "type": "hole", "d": "run_d", "axis": "z", "at": [0, 0, 0] },
+        { "type": "hole", "d": "axle_d", "axis": "x", "at": [0, 0, 0] }
+      ]
+    },
+    "crest": {
+      "name": "Fox crest",
+      "material": "pla_gold",
+      "note": "Print flat. The 2.4 mm cross hole runs on the brass axle; drill it through after printing.",
+      "features": [
+        {
+          "type": "extrude", "plane": "xz", "h": "crest_t", "offset": "-crest_t / 2",
+          "points": [
+            [0, "-8.2 * crest_s"], ["2.6 * crest_s", "-6 * crest_s"], ["4.1 * crest_s", "-4 * crest_s"], ["5.3 * crest_s", "-2 * crest_s"],
+            ["6.5 * crest_s", 0], ["6.5 * crest_s", "2.5 * crest_s"], ["5.4 * crest_s", "8.4 * crest_s"], ["3.3 * crest_s", "4.85 * crest_s"],
+            ["1.5 * crest_s", "5.45 * crest_s"], [0, "5.6 * crest_s"], ["-1.5 * crest_s", "5.45 * crest_s"], ["-3.3 * crest_s", "4.85 * crest_s"],
+            ["-5.4 * crest_s", "8.4 * crest_s"], ["-6.5 * crest_s", "2.5 * crest_s"], ["-6.5 * crest_s", 0], ["-5.3 * crest_s", "-2 * crest_s"],
+            ["-4.1 * crest_s", "-4 * crest_s"], ["-2.6 * crest_s", "-6 * crest_s"]
+          ]
+        },
+        { "type": "hole", "d": 2.4, "axis": "x", "at": [0, 0, 0] }
+      ]
+    },
+    "crest_axle": {
+      "name": "Crest axle",
+      "material": "brass",
+      "note": "Cut from 2 mm brass rod and deburr the ends.",
+      "features": [
+        { "type": "cylinder", "d": "axle_d", "h": "2 * innermost_or", "axis": "x", "at": ["-innermost_or", 0, 0] }
+      ]
+    },
+    "crest_spacer": {
+      "name": "Crest spacer tube",
+      "material": "brass",
+      "note": "Cut from 4 mm brass tube with a 2.3 mm bore. One each side keeps the crest centred on the axle.",
+      "features": [
+        { "type": "cylinder", "d": 4, "h": "innermost_ir - crest_half_w - 0.6", "axis": "x" },
+        { "type": "hole", "d": 2.3, "axis": "x", "at": [0, 0, 0] }
+      ]
+    },
+    "pin_a": {
+      "name": "Dowel pin 3 x 20",
+      "material": "steel",
+      "note": "ISO 8734. Pressed into the hoop; the outer ring turns on it.",
+      "features": [{ "type": "cylinder", "d": "pin_d", "h": "pin_a_l" }]
+    },
+    "pin_b": {
+      "name": "Dowel pin 3 x 26",
+      "material": "steel",
+      "note": "ISO 8734. Pressed into the outer ring; the inner ring turns on it.",
+      "features": [{ "type": "cylinder", "d": "pin_d", "h": "pin_b_l", "axis": "x" }]
+    },
+    "pin_c": {
+      "name": "Dowel pin 3 x 16",
+      "material": "steel",
+      "note": "ISO 8734. Pressed into the inner ring; the innermost ring turns on it.",
+      "features": [{ "type": "cylinder", "d": "pin_d", "h": "pin_c_l" }]
+    },
+    "spacer": {
+      "name": "Pivot spacer",
+      "material": "nylon",
+      "note": "M3 nylon spacer, 3 mm long, sanded to length. One on every pivot pin keeps the rings concentric.",
+      "features": [
+        { "type": "cylinder", "d": "spacer_d", "h": "spacer_l" },
+        { "type": "hole", "d": 3.2, "at": [0, 0, 0] }
+      ]
+    },
+    "clasp_outer": {
+      "name": "Outer clasp",
+      "material": "pla_gold",
+      "note": "Print on its side. Slides over the rim of the outer ring from outside; fix with a drop of cyanoacrylate. The two side clasps cover the heads of the inner ring's pins.",
+      "features": [
+        { "type": "box", "size": ["clasp_len", "outer_t + 2 * clasp_wall + 2 * clasp_fit", "8 + clasp_wall + clasp_fit"], "at": [0, 0, "outer_or - 8"] },
+        { "type": "cylinder", "op": "cut", "d": "2 * (outer_or + clasp_fit)", "h": "outer_t + 2 * clasp_fit", "axis": "y", "at": [0, "-outer_t / 2 - clasp_fit", 0] }
+      ]
+    },
+    "clasp_inner": {
+      "name": "Inner clasp",
+      "material": "pla_gold",
+      "note": "Print on its side. Slides over the rim of the inner ring at top and bottom, covering the heads of the innermost ring's pins; fix with cyanoacrylate.",
+      "features": [
+        { "type": "box", "size": ["clasp_len - 2", "ring_t + 2 * clasp_wall + 2 * clasp_fit", "5 + clasp_wall + clasp_fit"], "at": [0, 0, "inner_or - 5"] },
+        { "type": "cylinder", "op": "cut", "d": "2 * (inner_or + clasp_fit)", "h": "ring_t + 2 * clasp_fit", "axis": "y", "at": [0, "-ring_t / 2 - clasp_fit", 0] }
+      ]
+    },
+    "emblem": {
+      "name": "Crown emblem",
+      "material": "pla_gold",
+      "note": "Print flat, 2 mm thick. Glued to the front face of the outer ring at the top.",
+      "features": [
+        {
+          "type": "extrude", "plane": "xz", "h": 2, "offset": "-outer_t / 2 - 2",
+          "points": [
+            [-12, "outer_ir + 2"], [12, "outer_ir + 2"], [14, "outer_or - 4"], [7, "outer_or - 10"],
+            [0, "outer_or - 2"], [-7, "outer_or - 10"], [-14, "outer_or - 4"]
+          ]
+        }
+      ]
+    },
+    "saddle_screw": {
+      "name": "Screw M3 x 20, pan head",
+      "material": "steel",
+      "note": "ISO 7045. Clamps the hoop in the saddle.",
+      "features": [
+        { "type": "cylinder", "d": 5.5, "h": 2.4, "axis": "y", "at": [0, -2.4, 0] },
+        { "type": "cylinder", "d": 3, "h": 20, "axis": "y" }
+      ]
+    },
+    "saddle_nut": {
+      "name": "Nut M3",
+      "material": "steel",
+      "note": "ISO 4032.",
+      "features": [
+        { "type": "cylinder", "d": 6, "h": 2.4, "axis": "y" },
+        { "type": "hole", "d": 3, "axis": "y", "at": [0, 0, 0] }
+      ]
+    },
+    "base_screw": {
+      "name": "Screw M4 x 16, socket head",
+      "material": "steel",
+      "note": "ISO 4762. From under the base into the stem's insert.",
+      "features": [
+        { "type": "cylinder", "d": 7, "h": 4 },
+        { "type": "cylinder", "d": 4, "h": 16, "at": [0, 0, 4] }
+      ]
+    },
+    "insert": {
+      "name": "Heat-set insert M4 x 8",
+      "material": "brass",
+      "note": "Melted into the bottom of the stem with a soldering iron.",
+      "features": [
+        { "type": "cylinder", "d": 5.6, "h": 8 },
+        { "type": "hole", "d": 4, "at": [0, 0, 0] }
+      ]
+    },
+    "tassel": {
+      "name": "Tassel",
+      "material": "silk",
+      "note": "Bought silk tassel, about 60 mm. Its cord is tied through the eye in the hoop.",
+      "features": [
+        { "type": "cylinder", "d": 1.5, "h": "tassel_len / 3", "at": [0, 0, "-tassel_len / 3"] },
+        { "type": "cylinder", "d": 9, "h": "tassel_len * 2 / 3", "at": [0, 0, "-tassel_len"] }
+      ]
+    }
+  },
+  "assembly": [
+    { "id": "base", "part": "base" },
+    { "id": "base_screw", "part": "base_screw", "at": [0, 0, 1] },
+    { "id": "insert", "part": "insert", "at": [0, 0, "base_t"] },
+    { "id": "stem", "part": "stem", "at": [0, 0, "base_t"] },
+    { "id": "hoop", "part": "hoop", "at": [0, 0, "centre_z"] },
+    { "id": "saddle_screw_left", "part": "saddle_screw", "at": ["-screw_x", "-saddle_d / 2", "centre_z - screw_drop"] },
+    { "id": "saddle_screw_right", "part": "saddle_screw", "at": ["screw_x", "-saddle_d / 2", "centre_z - screw_drop"] },
+    { "id": "saddle_nut_left", "part": "saddle_nut", "at": ["-screw_x", "saddle_d / 2", "centre_z - screw_drop"] },
+    { "id": "saddle_nut_right", "part": "saddle_nut", "at": ["screw_x", "saddle_d / 2", "centre_z - screw_drop"] },
+    { "id": "tassel_left", "part": "tassel", "at": ["-tassel_x", "-ring_t / 2 - 1.25", "tassel_z"] },
+    { "id": "tassel_right", "part": "tassel", "at": ["tassel_x", "-ring_t / 2 - 1.25", "tassel_z"] },
+
+    { "id": "pin_hoop_top", "part": "pin_a", "at": [0, 0, "centre_z + hoop_or - pin_a_l"] },
+    { "id": "pin_hoop_bottom", "part": "pin_a", "at": [0, 0, "centre_z - hoop_or"] },
+    { "id": "spacer_hoop_top", "part": "spacer", "at": [0, 0, "centre_z + outer_or + 0.1"] },
+    { "id": "spacer_hoop_bottom", "part": "spacer", "at": [0, 0, "centre_z - outer_or - 0.1 - spacer_l"] },
+
+    { "id": "outer_ring", "part": "outer_ring", "at": [0, 0, "centre_z"] },
+    { "id": "emblem", "part": "emblem", "at": [0, 0, "centre_z"] },
+    { "id": "clasp_right", "part": "clasp_outer", "at": [0, 0, "centre_z"], "rot": [0, 90, 0] },
+    { "id": "clasp_left", "part": "clasp_outer", "at": [0, 0, "centre_z"], "rot": [0, -90, 0] },
+    { "id": "clasp_upper_right", "part": "clasp_outer", "at": [0, 0, "centre_z"], "rot": [0, 30, 0] },
+    { "id": "clasp_upper_left", "part": "clasp_outer", "at": [0, 0, "centre_z"], "rot": [0, -30, 0] },
+    { "id": "pin_outer_right", "part": "pin_b", "at": ["outer_or - pin_b_l", 0, "centre_z"] },
+    { "id": "pin_outer_left", "part": "pin_b", "at": ["-outer_or", 0, "centre_z"] },
+    { "id": "spacer_outer_right", "part": "spacer", "at": ["inner_or + 0.1", 0, "centre_z"], "rot": [0, 90, 0] },
+    { "id": "spacer_outer_left", "part": "spacer", "at": ["-inner_or - 0.1 - spacer_l", 0, "centre_z"], "rot": [0, 90, 0] },
+
+    { "id": "inner_ring", "part": "inner_ring", "at": [0, 0, "centre_z"] },
+    { "id": "clasp_inner_top", "part": "clasp_inner", "at": [0, 0, "centre_z"] },
+    { "id": "clasp_inner_bottom", "part": "clasp_inner", "at": [0, 0, "centre_z"], "rot": [0, 180, 0] },
+    { "id": "pin_inner_top", "part": "pin_c", "at": [0, 0, "centre_z + inner_or - pin_c_l"] },
+    { "id": "pin_inner_bottom", "part": "pin_c", "at": [0, 0, "centre_z - inner_or"] },
+    { "id": "spacer_inner_top", "part": "spacer", "at": [0, 0, "centre_z + innermost_or + 0.1"] },
+    { "id": "spacer_inner_bottom", "part": "spacer", "at": [0, 0, "centre_z - innermost_or - 0.1 - spacer_l"] },
+
+    { "id": "innermost_ring", "part": "innermost_ring", "at": [0, 0, "centre_z"] },
+    { "id": "crest_axle", "part": "crest_axle", "at": [0, 0, "centre_z"] },
+    { "id": "crest_spacer_right", "part": "crest_spacer", "at": ["crest_half_w + 0.3", 0, "centre_z"] },
+    { "id": "crest_spacer_left", "part": "crest_spacer", "at": ["-innermost_ir + 0.3", 0, "centre_z"] },
+    { "id": "crest", "part": "crest", "at": [0, 0, "centre_z"] }
+  ],
+  "connections": [
+    { "a": "base", "b": "stem", "type": "bolted", "note": "M4 x 16 from below into the heat-set insert" },
+    { "a": "base_screw", "b": "insert", "type": "threaded" },
+    { "a": "insert", "b": "stem", "type": "heat set" },
+    { "a": "stem", "b": "hoop", "type": "clamped", "note": "Hoop sits in the saddle slot, 2x M3 x 20 with nuts" },
+    { "a": "saddle_screw_left", "b": "saddle_nut_left", "type": "threaded" },
+    { "a": "saddle_screw_right", "b": "saddle_nut_right", "type": "threaded" },
+    { "a": "saddle_screw_left", "b": "hoop", "type": "through" },
+    { "a": "saddle_screw_right", "b": "hoop", "type": "through" },
+    { "a": "hoop", "b": "tassel_left", "type": "tied", "note": "Cord through the 2.5 mm eye" },
+    { "a": "hoop", "b": "tassel_right", "type": "tied", "note": "Cord through the 2.5 mm eye" },
+
+    { "a": "hoop", "b": "pin_hoop_top", "type": "press fit" },
+    { "a": "hoop", "b": "pin_hoop_bottom", "type": "press fit", "note": "Held in by the saddle floor" },
+    { "a": "pin_hoop_top", "b": "outer_ring", "type": "pivot", "note": "Vertical axis" },
+    { "a": "pin_hoop_bottom", "b": "outer_ring", "type": "pivot", "note": "Vertical axis" },
+    { "a": "pin_hoop_top", "b": "spacer_hoop_top", "type": "on pin" },
+    { "a": "pin_hoop_bottom", "b": "spacer_hoop_bottom", "type": "on pin" },
+
+    { "a": "outer_ring", "b": "emblem", "type": "glued" },
+    { "a": "outer_ring", "b": "clasp_right", "type": "glued", "note": "Covers the pin head" },
+    { "a": "outer_ring", "b": "clasp_left", "type": "glued", "note": "Covers the pin head" },
+    { "a": "outer_ring", "b": "clasp_upper_right", "type": "glued" },
+    { "a": "outer_ring", "b": "clasp_upper_left", "type": "glued" },
+    { "a": "outer_ring", "b": "pin_outer_right", "type": "press fit" },
+    { "a": "outer_ring", "b": "pin_outer_left", "type": "press fit" },
+    { "a": "pin_outer_right", "b": "inner_ring", "type": "pivot", "note": "Horizontal axis" },
+    { "a": "pin_outer_left", "b": "inner_ring", "type": "pivot", "note": "Horizontal axis" },
+    { "a": "pin_outer_right", "b": "spacer_outer_right", "type": "on pin" },
+    { "a": "pin_outer_left", "b": "spacer_outer_left", "type": "on pin" },
+
+    { "a": "inner_ring", "b": "clasp_inner_top", "type": "glued", "note": "Covers the pin head" },
+    { "a": "inner_ring", "b": "clasp_inner_bottom", "type": "glued", "note": "Covers the pin head" },
+    { "a": "inner_ring", "b": "pin_inner_top", "type": "press fit" },
+    { "a": "inner_ring", "b": "pin_inner_bottom", "type": "press fit" },
+    { "a": "pin_inner_top", "b": "innermost_ring", "type": "pivot", "note": "Axis in the inner ring's plane" },
+    { "a": "pin_inner_bottom", "b": "innermost_ring", "type": "pivot", "note": "Axis in the inner ring's plane" },
+    { "a": "pin_inner_top", "b": "spacer_inner_top", "type": "on pin" },
+    { "a": "pin_inner_bottom", "b": "spacer_inner_bottom", "type": "on pin" },
+
+    { "a": "innermost_ring", "b": "crest_axle", "type": "press fit" },
+    { "a": "crest_axle", "b": "crest", "type": "pivot", "note": "The crest spins on the axle" },
+    { "a": "crest_axle", "b": "crest_spacer_right", "type": "on axle" },
+    { "a": "crest_axle", "b": "crest_spacer_left", "type": "on axle" }
+  ],
+  "requirements": [
+    { "id": "R1", "text": "Nothing collides in the resting pose.", "check": "interferences == 0" },
+    { "id": "R2", "text": "The outer ring, with its clasps, spins a full turn inside the hoop with at least 1 mm to spare.", "check": "outer_sweep + 1 <= hoop_ir" },
+    { "id": "R3", "text": "The inner ring, with its clasps, tumbles a full turn inside the outer ring with at least 1 mm to spare.", "check": "sqrt((inner_or + clasp_wall + clasp_fit) ^ 2 + (ring_t / 2 + clasp_wall + clasp_fit) ^ 2 + (clasp_len / 2 - 1) ^ 2) + 1 <= outer_ir" },
+    { "id": "R4", "text": "The innermost ring turns a full turn inside the inner ring with at least 1 mm to spare.", "check": "sqrt(innermost_or ^ 2 + (ring_t / 2) ^ 2) + 1 <= inner_ir" },
+    { "id": "R5", "text": "The crest spins freely inside the innermost ring with at least 2 mm to spare.", "check": "crest_reach + 2 <= innermost_ir" },
+    { "id": "R6", "text": "Every pivot pin reaches at least 4 mm into the ring that turns on it, without passing through it.", "check": "pin_a_l - ring_w - gap >= 4 and pin_a_l - ring_w - gap <= outer_w and pin_b_l - outer_w - gap >= 4 and pin_b_l - outer_w - gap <= ring_w and pin_c_l - ring_w - gap >= 4 and pin_c_l - ring_w - gap <= innermost_w" },
+    { "id": "R7", "text": "The outer ring clears the saddle as it spins.", "check": "sqrt((hoop_or - ring_w) ^ 2 + ((ring_t + 0.3) / 2) ^ 2) >= sqrt(outer_or ^ 2 + (outer_t / 2) ^ 2) + 1" },
+    { "id": "R8", "text": "The largest printed part, the hoop, fits the printer bed with 10 mm margin all round.", "check": "2 * hoop_or + 20 <= bed" },
+    { "id": "R9", "text": "The tassels hang clear of the base by at least 10 mm.", "check": "tassel_z - tassel_len >= base_t + 10" },
+    { "id": "R10", "text": "The spinning outer ring misses the hanging tassels: 2 mm from each tassel head and 2 mm from its cord.", "check": "tassel_x - 4.5 >= sqrt(outer_sweep ^ 2 - (hoop_rc * sin(tassel_angle) + tassel_len / 3) ^ 2) + 2 and tassel_x - 0.75 >= sqrt(outer_sweep ^ 2 - (hoop_rc * sin(tassel_angle)) ^ 2) + 2" },
+    { "id": "R11", "text": "The base is wide enough not to tip: at least 70% of the hoop's diameter.", "check": "base_d >= 0.7 * 2 * hoop_or" },
+    { "id": "R12", "text": "A desk piece: no taller than 250 mm and under 0.6 kg.", "check": "size_z <= 250 and mass <= 0.6" }
+  ]
+}
